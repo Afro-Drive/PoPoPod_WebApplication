@@ -15,6 +15,10 @@
         <% String userName = (String) request.getAttribute("userName"); %>
         <% if(userName.equals("")){ userName = "Guest"; } %>
         <h1>Hello <%= userName %>! Welcome to PoPoPod!</h1>
+        <% String soundPath = (String) request.getAttribute("soundPath"); %>
+        <audio controls>
+            <source src="<%= soundPath %>/beyond_rainbow.mp3">
+        </audio>
         
         <p><a href="index.html">トップページへ戻る</a></p>
     </body>
