@@ -14,11 +14,17 @@ import javax.servlet.http.*;
  * @author Emicr
  */
 public class HelloServlet extends HttpServlet {
+    
+    private static final String UTF8 = "UTF-8";
+    private static final String RESOURCES_PATH = "";
 
     @Override
     protected void doPost(
             HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        //文字コードの設定
+        req.setCharacterEncoding(UTF8);
+        
         String userName = req.getParameter("userName");
         req.setAttribute("userName", userName);
 
