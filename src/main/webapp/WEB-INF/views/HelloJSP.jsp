@@ -18,7 +18,9 @@
         <audio controls>
             <source src="<%= soundPath %>/beyond_rainbow.mp3">
         </audio>
-        
+        <label for="reqSound">select or drag&drop music</label>
+        <input type="file" class="reqSound" name="reqSound">
         <p><a href="index.html">トップページへ戻る</a></p>
+        <script src="./assets/js/musicPlayer.js"></script>
     </body>
 </html>
