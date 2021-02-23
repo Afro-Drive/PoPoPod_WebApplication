@@ -13,7 +13,6 @@
     </head>
     <body>
         <% String userName = (String) request.getAttribute("userName"); %>
-        <% if(userName.equals("")){ userName = "Guest"; } %>
         <h1>Hello <%= userName %>! Welcome to PoPoPod!</h1>
         <% String soundPath = (String) request.getAttribute("soundPath"); %>
         <audio controls>

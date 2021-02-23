@@ -9,9 +9,16 @@
         
         <p>Enter This Form</p>
         <form action="servlettest1" method="post">
-            <label for="userName">User Name</label>
-            <input id="userName" type="text" name="userName">
-            <button type="submit" name="enter" value="servlettest1">Start Playing!</button>
+            <div id="user-info">
+                <label for="userName">User Name</label>
+                <input id="userName" type="text" name="userName">
+            </div>
+            <div id="music-info">
+                <label for="selectSound">select or drag&drop music</label>
+                <input type="file" class="selectSound" name="selectSound">
+            </div>
+                <button type="submit" name="enter" value="servlettest1">Start Playing!</button>
         </form>
+        <script src="assets/js/musicPlayer.js"></script>
     </body>
 </html>

@@ -8,6 +8,7 @@ package com.mycompany.popopod_web;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Initial processing servlet
@@ -19,6 +20,7 @@ public class HelloServlet extends HttpServlet {
     private static final String APP_ROOT_PATH = "http://localhost:8084/PoPoPod_Web/";
     private static final String ASSETS_PATH = "assets/";
     private static final String SOUND_PATH = "sound/";
+    private static final String GUEST = "Guest";
 
     @Override
     protected void doPost(
@@ -28,7 +30,12 @@ public class HelloServlet extends HttpServlet {
         req.setCharacterEncoding(UTF8);
         
         String userName = req.getParameter("userName");
+        if(StringUtils.isEmpty(userName)) {
+            userName = GUEST;
+        }
+        
         String soundPath = APP_ROOT_PATH + ASSETS_PATH + SOUND_PATH;
+        
         req.setAttribute("userName", userName);
         req.setAttribute("soundPath", soundPath);
 
