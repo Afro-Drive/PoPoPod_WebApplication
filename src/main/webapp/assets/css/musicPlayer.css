@@ -1,0 +1,13 @@
+/* 
+    Created on : 2021/02/24, 21:24:56
+    Author     : Emicr
+*/
+
+#file-drag-area {
+    width: 300px;
+    height: 150px;
+}
+
+.drag-area-active {
+    background-color: #E5E5E5;
+}

@@ -47,11 +47,6 @@ public class HelloServlet extends HttpServlet {
         
         // check uploaded music file extension
         String soundPath = APP_ROOT_PATH + ASSETS_PATH + SOUND_PATH;
-//        Part part = req.getPart(REQSOUND);
-//        String musicFileName = this.getReqSoundFileName(part);
-//        boolean usable = this.checkFileExtension(musicFileName);
-//        if(usable) {
-//        }
         req.setAttribute("soundPath", soundPath);
 
         String path = "/WEB-INF/views/HelloJSP.jsp";
