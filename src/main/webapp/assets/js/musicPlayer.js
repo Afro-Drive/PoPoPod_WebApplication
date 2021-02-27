@@ -18,7 +18,9 @@ inputMusic.addEventListener(EVENT_CHANGE, function(event) {
     const files = event.target.files; //取得したファイル群を配列で取り出す
     const name = files[0].name;
     if(checkFileExtension(name)) {
-        playSelectMusic(files[0]);
+        let form = fileDragArea.firstElementChild;
+        form.submit();
+//        playSelectMusic(files[0]);
     }
 },false);
 
