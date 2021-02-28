@@ -6,10 +6,12 @@
 package com.mycompany.popopod_web;
 
 import com.mycompany.popopod_web.constants.ArrowFileExtension;
+import com.mycompany.popopod_web.constants.DOMElement;
 import com.mycompany.popopod_web.constants.FormTopic;
 import com.mycompany.popopod_web.constants.ServletConstants;
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -30,30 +32,39 @@ public class FileDeployServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
+
         req.setCharacterEncoding(ServletConstants.UTF8);
-        
+
         String userName = req.getParameter(FormTopic.USERNAME.getName());
         Part audioPart = req.getPart(FormTopic.REQSOUND.getName());
-        StringBuilder sb = new StringBuilder();
-//        req.getParts().stream().filter(part -> part)
-        
-        // check uploaded music file extension
-        String filename = audioPart.getSubmittedFileName();
-        String diskRealPath = "";
+        StringBuilder audioQueueDOM = new StringBuilder(DOMElement.OL.getOpen());
         String servletPath = "";
+        boolean isFirst = true;
 
-        if(checkFileExtension(filename)) {
-            diskRealPath = getServletContext().getRealPath(
-                    ServletConstants.SLASH + ServletConstants.ASSETS_PATH + ServletConstants.SOUND_PATH);
-            audioPart.write(diskRealPath + filename);
+        List<Part> filteredParts = req.getParts()
+                .stream()
+                .filter(part -> part.getName().equals(FormTopic.REQSOUND.getName()))
+                .map(part -> part)
+                .collect(Collectors.toList());
 
-            servletPath =
-                    ServletConstants.APP_ROOT_PATH
-                    + ServletConstants.ASSETS_PATH
-                    + ServletConstants.SOUND_PATH
-                    + filename;
+        for(Part part : filteredParts) {
+            audioQueueDOM.append(DOMElement.LI.getOpen())
+                    .append(part.getName())
+                    .append(DOMElement.LI.getClose());
+
+            String filename = part.getSubmittedFileName();
+            // check uploaded music file extension
+            if (checkFileExtension(filename)) {
+                this.saveToDisk(filename, part);
+
+                if (isFirst) {
+                    servletPath = this.generateServletPath(filename);
+                    isFirst = false;
+                }
+            }
         }
+        
+        audioQueueDOM.append(DOMElement.OL.getClose());
 
         req.setAttribute("soundPath", servletPath);
         req.setAttribute("userName", userName);
@@ -64,18 +75,49 @@ public class FileDeployServlet extends HttpServlet {
     }
 
     /**
+     * generate the virtual file path on Servlet
+     * @param filename to success deployment in disk
+     * @return the virtula path on servlet
+     */
+    private String generateServletPath(String filename) {
+        return new StringBuilder().append(ServletConstants.APP_ROOT_PATH)
+                .append(ServletConstants.ASSETS_PATH)
+                .append(ServletConstants.SOUND_PATH)
+                .append(filename)
+                .toString();
+    }
+
+    /**
+     * save the file in disk with using part
+     * @param filename to save to disk
+     * @param part part object
+     * @throws IOException 
+     */
+    private void saveToDisk(String filename, Part part) throws IOException {
+        String diskRealPath = getServletContext().getRealPath(
+                new StringBuffer()
+                        .append(ServletConstants.SLASH)
+                        .append(ServletConstants.ASSETS_PATH)
+                        .append(ServletConstants.SOUND_PATH)
+                        .append(filename)
+                        .toString());
+        part.write(diskRealPath);
+    }
+
+    /**
      * check if file extension is allowed
+     *
      * @param filename to check the extension
      * @return true: allowed extension<br>false: not allowed extension
      */
     private boolean checkFileExtension(String filename) {
-        if(StringUtils.isEmpty(filename)) {
+        if (StringUtils.isEmpty(filename)) {
             return false;
         }
 
         String ext = getFileExtension(filename);
-        for(ArrowFileExtension extension : ArrowFileExtension.values()) {
-            if(ext.startsWith(extension.getName())) {
+        for (ArrowFileExtension extension : ArrowFileExtension.values()) {
+            if (ext.startsWith(extension.getName())) {
                 return true;
             }
         }
@@ -84,12 +126,13 @@ public class FileDeployServlet extends HttpServlet {
 
     /**
      * get file extension
+     *
      * @param filename to get the extension
      * @return file extension or empty value if not exist extension
      */
     private String getFileExtension(String filename) {
         int startPos = StringUtils.lastIndexOf(filename, ".");
-        if(startPos == -1) {
+        if (startPos == -1) {
             return "";
         }
         return filename.substring(startPos + 1);

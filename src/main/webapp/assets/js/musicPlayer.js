@@ -115,7 +115,7 @@ function dropHandler(e) {
     let dataTransfer = getCorrectFilesDataTransfer(e.dataTransfer.files);
     if(dataTransfer.files.length) {
         inputMusic.files = dataTransfer.files;
-        let form = e.target.firstElementChild;
+        let form = e.target.parentElement;
         form.submit();
     }
 }
