@@ -23,7 +23,7 @@
                 <source id="audioSource" src="<%= soundPath %>">
             </audio>
         </div>
-        <div id="file-drag-area">
+        <div id="file-drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event)">
             <form action="filedeploy" method="post" enctype="multipart/form-data">
                 <div><label for="reqSound">select or drag&drop music</label></div>
                 <input type="file" class="reqSound" name="reqSound">

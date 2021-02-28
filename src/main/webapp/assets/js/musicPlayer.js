@@ -10,39 +10,38 @@ const EVENT_DRAGLEAVE = 'dragleave';
 const EVENT_DROP = 'drop';
 
 let inputMusic = document.getElementsByClassName('reqSound')[0];
-let fileDragArea = document.getElementById('file-drag-area');
+let fileDropArea = document.getElementById('file-drop-area');
 let audio = document.getElementsByTagName('audio')[0];
 
 // pick up and check user's requested music
 inputMusic.addEventListener(EVENT_CHANGE, function(event) {
     const files = event.target.files; //取得したファイル群を配列で取り出す
-    const name = files[0].name;
-    if(checkFileExtension(name)) {
-        let form = fileDragArea.firstElementChild;
+    if(files[0] && checkFileExtension(files[0].name)) {
+        let form = fileDropArea.firstElementChild;
         form.submit();
-//        playSelectMusic(files[0]);
     }
 },false);
 
 // add the event when music file drags over and leaves
-fileDragArea.addEventListener(EVENT_DRAGOVER, function(event) {
-    fileDragArea.classList.add('drag-area-active');
-    event.stopPropagation();
-},false);
-
-fileDragArea.addEventListener(EVENT_DRAGLEAVE, function(event) {
-    fileDragArea.classList.remove('drag-area-active');
-    event.stopPropagation();
-},false);
+//fileDropArea.addEventListener(EVENT_DRAGOVER, function(event) {
+//    fileDropArea.classList.add('drag-area-active');
+//    event.stopPropagation();
+//},false);
+//
+//fileDropArea.addEventListener(EVENT_DRAGLEAVE, function(event) {
+//    fileDropArea.classList.remove('drag-area-active');
+//    event.stopPropagation();
+//},false);
 
 // 動作しないため、要修正
-fileDragArea.addEventListener(EVENT_DROP, function(event) {
-    const files = event.target.files; //取得したファイル群を配列で取り出す
-    const name = files[0].name;
-    checkFileExtension(name);
-    
-    event.preventDefault();
-},false);
+//fileDropArea.addEventListener(EVENT_DROP, function(event) {
+//    const files = event.target.files; //取得したファイル群を配列で取り出す
+//    const name = files[0].name;
+//    console.log('drop file');
+//    checkFileExtension(name);
+//    
+//    event.preventDefault();
+//},false);
 
 /************************
  * defined function
@@ -84,4 +83,45 @@ function playSelectMusic(musicFile) {
     audioSource.setAttribute('src', filename);
     audio.load();
     audio.play();
+}
+
+/**
+ * the event handler when any file(s) is dropped from OS file system
+ * @param {Event} e event object
+ * @returns {void}
+ */
+function dropHandler(e) {
+    e.preventDefault();
+
+    console.log('drop');
+    inputMusic.files = e.dataTransfer.files;
+    let form = e.target.firstElementChild;
+    form.submit();
+    
+//    for (let i = 0; i < e.dataTransfer.files.length; i++) {
+//        let filename = e.dataTransfer.files[i].name;
+//        console.log(`file[${i}].name = ${filename}`);
+//        
+//        if(checkFileExtension(filename)) {
+//            let form = fileDropArea.firstElementChild;
+//            form.submit();
+//        }
+//    }
+}
+
+/**
+ * the event handler when the file(s) from OS file system enter the drop zone 
+ * @param {Event} e Event object
+ * @returns {void}
+ */
+function dragOverHandler(e) {
+    console.log('File(s) enter drop zone.');
+
+    e.preventDefault();
+    fileDropArea.classList.add('drag-area-active');
+}
+
+function dragLeaveHandler(e) {
+    e.preventDefault();
+    fileDropArea.classList.remove('drag-area-active');
 }
