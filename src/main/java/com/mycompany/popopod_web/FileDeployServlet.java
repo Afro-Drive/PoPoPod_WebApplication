@@ -23,8 +23,9 @@ import org.apache.commons.lang3.StringUtils;
 @WebServlet(name = "filedeploy", urlPatterns = "/filedeploy")
 @MultipartConfig(
         location = "C:/Java_work/PoPoPod_tmp",
-        maxFileSize = 1024 * 1024 * 10,
-        maxRequestSize = 1024 * 1024 * 5)
+        maxFileSize = 1024 * 1024 * 100,
+        maxRequestSize = 1024 * 1024 * 50,
+        fileSizeThreshold = 1024 * 1024 * 3)
 public class FileDeployServlet extends HttpServlet {
 
     @Override
@@ -34,6 +35,8 @@ public class FileDeployServlet extends HttpServlet {
         
         String userName = req.getParameter(FormTopic.USERNAME.getName());
         Part audioPart = req.getPart(FormTopic.REQSOUND.getName());
+        StringBuilder sb = new StringBuilder();
+//        req.getParts().stream().filter(part -> part)
         
         // check uploaded music file extension
         String filename = audioPart.getSubmittedFileName();

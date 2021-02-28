@@ -23,13 +23,11 @@
                 <source id="audioSource" src="<%= soundPath %>">
             </audio>
         </div>
-        <div id="file-drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event)">
-            <form action="filedeploy" method="post" enctype="multipart/form-data">
-                <div><label for="reqSound">select or drag&drop music</label></div>
-                <input type="file" class="reqSound" name="reqSound">
-                <input type="hidden" name="userName" value="<%= userName %>">
-            </form>
-        </div>
+                <form action="filedeploy" method="post" enctype="multipart/form-data">
+                    <div><label for="reqSound">select or drag&drop music</label></div>
+                    <input type="file" id="file-drop-area" name="reqSound" multiple ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event)">
+                    <input type="hidden" name="userName" value="<%= userName%>">
+                </form>
         <p><a href="index.html">トップページへ戻る</a></p>
         <script src="./assets/js/musicPlayer.js?date='<%= AssetsUtil.getLastModifiedDate(config.getServletContext().getRealPath("/assets/js/musicPlayer.js")) %>'"></script>
     </body>

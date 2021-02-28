@@ -9,15 +9,18 @@ const EVENT_DRAGOVER = 'dragover';
 const EVENT_DRAGLEAVE = 'dragleave';
 const EVENT_DROP = 'drop';
 
-let inputMusic = document.getElementsByClassName('reqSound')[0];
-let fileDropArea = document.getElementById('file-drop-area');
+let inputMusic = document.getElementById('file-drop-area');
 let audio = document.getElementsByTagName('audio')[0];
 
 // pick up and check user's requested music
 inputMusic.addEventListener(EVENT_CHANGE, function(event) {
-    const files = event.target.files; //取得したファイル群を配列で取り出す
-    if(files[0] && checkFileExtension(files[0].name)) {
-        let form = fileDropArea.firstElementChild;
+    console.log(inputMusic);
+    console.log(inputMusic.files);
+    const dataTransfer = getCorrectFilesDataTransfer(inputMusic.files);
+    if(dataTransfer.files.length) {
+        console.log('dataTransfer: ' + dataTransfer);
+        inputMusic.files = dataTransfer.files;
+        let form = inputMusic.parentElement;
         form.submit();
     }
 },false);
@@ -53,6 +56,7 @@ inputMusic.addEventListener(EVENT_CHANGE, function(event) {
  * @returns {bool}
  */
 function checkFileExtension(filename) {
+    console.log(filename);
     const extension = getFileExtension(filename).toLowerCase();
     if(extension === '' || ALLOW_EXTENSIONS.indexOf(extension) === -1) {
         alert(`This file is not supported format[filename:${filename}]. Please select file again.`);
@@ -70,6 +74,21 @@ function getFileExtension(filename) {
     let pos = filename.lastIndexOf('.');
     if(pos === -1) return '';
     return filename.slice(pos + 1);
+}
+
+/**
+ * get DataTransfer from requested file list
+ * @param {FileList} files to check the extension
+ * @returns {DataTransfer} DataTransfer object having correct format files in own fileList
+ */
+function getCorrectFilesDataTransfer(files) {
+    const dataTransfer = new DataTransfer();
+    for(let file of files) {
+        if(file && checkFileExtension(file.name)) {
+            dataTransfer.items.add(file);
+        }
+    }
+    return dataTransfer;
 }
 
 /**
@@ -93,20 +112,12 @@ function playSelectMusic(musicFile) {
 function dropHandler(e) {
     e.preventDefault();
 
-    console.log('drop');
-    inputMusic.files = e.dataTransfer.files;
-    let form = e.target.firstElementChild;
-    form.submit();
-    
-//    for (let i = 0; i < e.dataTransfer.files.length; i++) {
-//        let filename = e.dataTransfer.files[i].name;
-//        console.log(`file[${i}].name = ${filename}`);
-//        
-//        if(checkFileExtension(filename)) {
-//            let form = fileDropArea.firstElementChild;
-//            form.submit();
-//        }
-//    }
+    let dataTransfer = getCorrectFilesDataTransfer(e.dataTransfer.files);
+    if(dataTransfer.files.length) {
+        inputMusic.files = dataTransfer.files;
+        let form = e.target.firstElementChild;
+        form.submit();
+    }
 }
 
 /**
@@ -118,10 +129,10 @@ function dragOverHandler(e) {
     console.log('File(s) enter drop zone.');
 
     e.preventDefault();
-    fileDropArea.classList.add('drag-area-active');
+    inputMusic.classList.add('drag-area-active');
 }
 
 function dragLeaveHandler(e) {
     e.preventDefault();
-    fileDropArea.classList.remove('drag-area-active');
+    inputMusic.classList.remove('drag-area-active');
 }
