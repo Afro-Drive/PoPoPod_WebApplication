@@ -14,16 +14,22 @@ public enum DOMElement {
 
     UL("<ul>", "</ul>"),
     OL("<ol>", "</ol>"),
-    LI("<li>", "</li>");
+    LI("<li>", "</li>"),
+    A("<a>", "</a>");
 
+
+    private DOMElement(String open) {
+        this.open = open;
+        this.close = "";
+    }
 
     private DOMElement(String open, String close) {
         this.open = open;
         this.close = close;
     }
     
-    private String open;
-    private String close;
+    private final String open;
+    private final String close;
 
     /**
      * get the open DOM Tage enum value
@@ -34,7 +40,7 @@ public enum DOMElement {
     }
 
     private void setOpen(String open) {
-        this.open = open;
+        // do nothing
     }
 
     /**
@@ -46,6 +52,6 @@ public enum DOMElement {
     }
 
     private void setClose(String close) {
-        this.close = close;
+        // do nothing
     }
 }

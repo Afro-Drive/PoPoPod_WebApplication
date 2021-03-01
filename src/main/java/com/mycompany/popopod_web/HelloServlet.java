@@ -33,6 +33,7 @@ public class HelloServlet extends HttpServlet {
         req.setAttribute(FormTopic.USERNAME.getName(),userName);
 
         req.setAttribute(FormTopic.SOUNDPATH.getName(), StringUtils.EMPTY);
+        req.setAttribute(FormTopic.REQQUEUE.getName(), StringUtils.EMPTY);
 
         String path = "/WEB-INF/views/HelloJSP.jsp";
         RequestDispatcher dispatcher = req.getRequestDispatcher(path);

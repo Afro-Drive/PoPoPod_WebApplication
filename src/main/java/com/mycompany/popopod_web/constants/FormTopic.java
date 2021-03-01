@@ -12,9 +12,10 @@ package com.mycompany.popopod_web.constants;
 public enum FormTopic {
     REQSOUND("reqSound"),
     USERNAME("userName"),
-    SOUNDPATH("soundPath");
+    SOUNDPATH("soundPath"),
+    REQQUEUE("reqQueue");
 
-    private String name;
+    private final String name;
 
     private FormTopic(String topic) {
         this.name = topic;

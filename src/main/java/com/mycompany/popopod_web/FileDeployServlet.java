@@ -36,7 +36,6 @@ public class FileDeployServlet extends HttpServlet {
         req.setCharacterEncoding(ServletConstants.UTF8);
 
         String userName = req.getParameter(FormTopic.USERNAME.getName());
-        Part audioPart = req.getPart(FormTopic.REQSOUND.getName());
         StringBuilder audioQueueDOM = new StringBuilder(DOMElement.OL.getOpen());
         String servletPath = "";
         boolean isFirst = true;
@@ -48,11 +47,13 @@ public class FileDeployServlet extends HttpServlet {
                 .collect(Collectors.toList());
 
         for(Part part : filteredParts) {
+            String filename = part.getSubmittedFileName();
+
+            // create DOM element of requested playing queue
             audioQueueDOM.append(DOMElement.LI.getOpen())
-                    .append(part.getName())
+                    .append(filename)
                     .append(DOMElement.LI.getClose());
 
-            String filename = part.getSubmittedFileName();
             // check uploaded music file extension
             if (checkFileExtension(filename)) {
                 this.saveToDisk(filename, part);
@@ -66,8 +67,9 @@ public class FileDeployServlet extends HttpServlet {
         
         audioQueueDOM.append(DOMElement.OL.getClose());
 
-        req.setAttribute("soundPath", servletPath);
-        req.setAttribute("userName", userName);
+        req.setAttribute(FormTopic.SOUNDPATH.getName(), servletPath);
+        req.setAttribute(FormTopic.REQQUEUE.getName(), audioQueueDOM.toString());
+        req.setAttribute(FormTopic.USERNAME.getName(), userName);
 
         String path = "/WEB-INF/views/HelloJSP.jsp";
         RequestDispatcher dispatcher = req.getRequestDispatcher(path);

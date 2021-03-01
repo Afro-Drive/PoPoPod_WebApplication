@@ -25,27 +25,6 @@ inputMusic.addEventListener(EVENT_CHANGE, function(event) {
     }
 },false);
 
-// add the event when music file drags over and leaves
-//fileDropArea.addEventListener(EVENT_DRAGOVER, function(event) {
-//    fileDropArea.classList.add('drag-area-active');
-//    event.stopPropagation();
-//},false);
-//
-//fileDropArea.addEventListener(EVENT_DRAGLEAVE, function(event) {
-//    fileDropArea.classList.remove('drag-area-active');
-//    event.stopPropagation();
-//},false);
-
-// 動作しないため、要修正
-//fileDropArea.addEventListener(EVENT_DROP, function(event) {
-//    const files = event.target.files; //取得したファイル群を配列で取り出す
-//    const name = files[0].name;
-//    console.log('drop file');
-//    checkFileExtension(name);
-//    
-//    event.preventDefault();
-//},false);
-
 /************************
  * defined function
  ************************/

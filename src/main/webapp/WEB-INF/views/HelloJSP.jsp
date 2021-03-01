@@ -4,6 +4,7 @@
     Author     : Emicr
 --%>
 
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="com.mycompany.popopod_web.constants.FormTopic"%>
 <%@page import="com.mycompany.popopod_web.utils.AssetsUtil"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -23,11 +24,14 @@
                 <source id="audioSource" src="<%= soundPath %>">
             </audio>
         </div>
-                <form action="filedeploy" method="post" enctype="multipart/form-data">
-                    <div><label for="reqSound">select or drag&drop music</label></div>
-                    <input type="file" id="file-drop-area" name="reqSound" multiple ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event)">
-                    <input type="hidden" name="userName" value="<%= userName%>">
-                </form>
+        <div id="audio-queue">
+            <%= (String) request.getAttribute(FormTopic.REQQUEUE.getName()) %>
+        </div>
+        <form action="filedeploy" method="post" enctype="multipart/form-data">
+            <div><label for="reqSound">select or drag&drop music</label></div>
+            <input type="file" id="file-drop-area" name="reqSound" multiple ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event)">
+            <input type="hidden" name="userName" value="<%= userName%>">
+        </form>
         <p><a href="index.html">トップページへ戻る</a></p>
         <script src="./assets/js/musicPlayer.js?date='<%= AssetsUtil.getLastModifiedDate(config.getServletContext().getRealPath("/assets/js/musicPlayer.js")) %>'"></script>
     </body>
