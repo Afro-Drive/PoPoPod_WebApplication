@@ -51,7 +51,9 @@ public class FileDeployServlet extends HttpServlet {
 
             // create DOM element of requested playing queue
             audioQueueDOM.append(DOMElement.LI.getOpen())
+                    .append(DOMElement.A.getOpen())
                     .append(filename)
+                    .append(DOMElement.A.getClose())
                     .append(DOMElement.LI.getClose());
 
             // check uploaded music file extension

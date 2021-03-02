@@ -3,14 +3,27 @@
 /*************************
  * defined field
  *************************/
+
 const ALLOW_EXTENSIONS = new Array('mp3', 'mp4', 'mpeg', 'wav', 'ogg');
+
+/*************************
+ * Application URL Root Path
+ **************************/
+const APP_ROOT_PATH = "http://localhost:8084/PoPoPod_Web/";
+const ASSETS_PATH = "assets/";
+const SOUND_PATH = "sound/";
+const SLASH = "/";
+
+// Event Names
 const EVENT_CHANGE = 'change';
 const EVENT_DRAGOVER = 'dragover';
 const EVENT_DRAGLEAVE = 'dragleave';
 const EVENT_DROP = 'drop';
+const EVENT_CLICK = 'click';
 
 let inputMusic = document.getElementById('file-drop-area');
 let audio = document.getElementsByTagName('audio')[0];
+let audioQueue = document.getElementById('audio-queue');
 
 // pick up and check user's requested music
 inputMusic.addEventListener(EVENT_CHANGE, function(event) {
@@ -24,6 +37,11 @@ inputMusic.addEventListener(EVENT_CHANGE, function(event) {
         form.submit();
     }
 },false);
+
+// generate DOM Element and attach to audio-queue element
+if(audioQueue.childElementCount > 0) {
+    designDetailsQueue(audioQueue);
+}
 
 /************************
  * defined function
@@ -114,4 +132,33 @@ function dragOverHandler(e) {
 function dragLeaveHandler(e) {
     e.preventDefault();
     inputMusic.classList.remove('drag-area-active');
+}
+
+/**
+ * add the function swapping playing music of requested queue, to audio-queue element
+ * @param {Node} audioQueue
+ * @returns {undefined}
+ */
+function designDetailsQueue(audioQueue) {
+    let children = audioQueue.children;
+
+    for(let childElem of children) {
+        console.log(childElem.tagName);
+        if(childElem.tagName.toLowerCase() === 'ol') {
+            for(let liElem of childElem.children) {
+                liElem.addEventListener(EVENT_CLICK, switchOtherMusic);
+            }
+        }
+    }
+}
+
+/**
+ * 
+ * @param {Event} e
+ * @returns {undefined}
+ */
+function switchOtherMusic(e) {
+    let musicName = e.target.textContent;
+    audio.firstElementChild.src = APP_ROOT_PATH + ASSETS_PATH + SOUND_PATH + musicName;
+    audio.load();
 }
