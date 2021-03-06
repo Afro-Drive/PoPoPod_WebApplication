@@ -20,6 +20,7 @@ const EVENT_DRAGOVER = 'dragover';
 const EVENT_DRAGLEAVE = 'dragleave';
 const EVENT_DROP = 'drop';
 const EVENT_CLICK = 'click';
+const EVENT_AUDIO_ENDED = 'ended';
 
 let inputMusic = document.getElementById('file-drop-area');
 let audio = document.getElementsByTagName('audio')[0];
@@ -37,6 +38,9 @@ inputMusic.addEventListener(EVENT_CHANGE, function(event) {
         form.submit();
     }
 },false);
+
+// initialize audio element
+initAudioElement(audio);
 
 // generate DOM Element and attach to audio-queue element
 if(audioQueue.childElementCount > 0) {
@@ -137,28 +141,72 @@ function dragLeaveHandler(e) {
 /**
  * add the function swapping playing music of requested queue, to audio-queue element
  * @param {Node} audioQueue
- * @returns {undefined}
+ * @returns {void}
  */
 function designDetailsQueue(audioQueue) {
     let children = audioQueue.children;
 
     for(let childElem of children) {
-        console.log(childElem.tagName);
         if(childElem.tagName.toLowerCase() === 'ol') {
             for(let liElem of childElem.children) {
                 liElem.addEventListener(EVENT_CLICK, switchOtherMusic);
+                if(liElem === childElem.firstElementChild) {
+                    liElem.classList.add('playing-queue');
+                }
             }
         }
     }
 }
 
 /**
- * 
- * @param {Event} e
- * @returns {undefined}
+ * Switch other music selected by user
+ * @param {Event} e event object to select other music asset
+ * @returns {void}
  */
 function switchOtherMusic(e) {
     let musicName = e.target.textContent;
+    loadMusic(musicName);
+}
+
+/**
+ * Load music to audio element
+ * @param {String} musicName to load music file name
+ * @returns {void}
+ */
+function loadMusic(musicName) {
     audio.firstElementChild.src = APP_ROOT_PATH + ASSETS_PATH + SOUND_PATH + musicName;
     audio.load();
+}
+
+function play(musicName) {
+    loadMusic(musicName);
+    audio.play();
+}
+/**
+ * Initialize HTMLaudioElement. Add Event, class.
+ * @param {HTMLAudioElement} audioElem
+ * @returns {void}
+ */
+function initAudioElement(audioElem) {
+    audioElem.addEventListener(EVENT_AUDIO_ENDED, autoPlayNextQueue);
+}
+/**
+ * Automatically load next queue music
+ * 
+ * <p>If playing music is the tail of requested queue, do nothing.</p>
+ * @param {AudioProcessingEvent} audioEve
+ * @returns {void}
+ */
+function autoPlayNextQueue(audioEve) {
+    const queueList = Array.prototype.slice.call(audioQueue.children)
+            .find(child => child.tagName.toLowerCase() === 'ol')
+            .children;
+    const nextIndex = Array.prototype.slice.call(queueList)
+            .findIndex(item => item.classList.contains('playing-queue')) + 1;
+
+    if(nextIndex < queueList.length) {
+        const nextMusicName = queueList[nextIndex].textContent;
+
+        play(nextMusicName);
+    }
 }
